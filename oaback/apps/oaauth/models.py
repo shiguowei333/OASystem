@@ -2,6 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User, AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.contrib.auth.hashers import make_password
 
+# 用户状态
+class UserStatusChoices(models.IntegerChoices):
+    ACTIVED = 1
+    UNACTIVE = 2
+    LOCK = 3
+
 class OAUserManager(BaseUserManager):
     use_in_migrations = True
 
@@ -31,6 +37,7 @@ class OAUserManager(BaseUserManager):
         """
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('status', UserStatusChoices.ACTIVED)
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError('超级用户必须设置is_staff为True')
@@ -40,14 +47,9 @@ class OAUserManager(BaseUserManager):
         return self._create_user(real_name, email, password, **extra_fields)
 
 
-# 用户状态
-class UserStatusChoices(models.ModelChoices):
-    ACTIVED = 1
-    UNACTIVE = 2
-    LOCK = 3
 
 # 重写user模型
-class OAUserModel(AbstractBaseUser, PermissionsMixin):
+class OAUser(AbstractBaseUser, PermissionsMixin):
     """
         自定义的User模型
     """
@@ -56,11 +58,21 @@ class OAUserModel(AbstractBaseUser, PermissionsMixin):
     telephone = models.CharField(max_length=20, blank=True, verbose_name='手机号')
     is_staff = models.BooleanField(default=True, verbose_name='员工用户')
     status = models.IntegerField(choices=UserStatusChoices.choices, default=UserStatusChoices.UNACTIVE, verbose_name='用户状态')
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True, verbose_name='是否激活')
     date_joined = models.DateTimeField(auto_now_add=True, verbose_name='加入时间')
 
     objects = OAUserManager()
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['real_name', 'password']
 
+    def clean(self):
+        super().clean()
+        self.email = self.__class__.objects.normalize_email(self.email)
+
+    def get_full_name(self):
+        return self.real_name
+
+    def get_short_name(self):
+        return self.real_name
