@@ -7,7 +7,7 @@ from shortuuidfield import ShortUUIDField
 class UserStatusChoices(models.IntegerChoices):
     ACTIVED = 1
     UNACTIVE = 2
-    LOCK = 3
+    LOCKED = 3
 
 class OAUserManager(BaseUserManager):
     use_in_migrations = True
