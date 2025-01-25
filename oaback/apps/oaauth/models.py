@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User, AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.contrib.auth.hashers import make_password
+from shortuuidfield import ShortUUIDField
 
 # 用户状态
 class UserStatusChoices(models.IntegerChoices):
@@ -53,6 +54,7 @@ class OAUser(AbstractBaseUser, PermissionsMixin):
     """
         自定义的User模型
     """
+    uid = ShortUUIDField(primary_key=True)
     real_name = models.CharField(max_length=150, unique=False, verbose_name='真实姓名')
     email = models.EmailField(unique=True, blank=False, verbose_name='邮箱')
     telephone = models.CharField(max_length=20, blank=True, verbose_name='手机号')
