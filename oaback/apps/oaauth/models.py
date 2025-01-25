@@ -62,6 +62,7 @@ class OAUser(AbstractBaseUser, PermissionsMixin):
     status = models.IntegerField(choices=UserStatusChoices.choices, default=UserStatusChoices.UNACTIVE, verbose_name='用户状态')
     is_active = models.BooleanField(default=True, verbose_name='是否激活')
     date_joined = models.DateTimeField(auto_now_add=True, verbose_name='加入时间')
+    department = models.ForeignKey('OADepartment', null=True, on_delete=models.SET_NULL, related_name='staffs', related_query_name='staffs', verbose_name='所属部门')
 
     objects = OAUserManager()
 
@@ -78,3 +79,11 @@ class OAUser(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.real_name
+
+
+# 部门表模型
+class OADepartment(models.Model):
+    name = models.CharField(max_length=100, verbose_name='部门名称')
+    intro = models.CharField(max_length=200, verbose_name='部门介绍')
+    leader = models.OneToOneField(OAUser, null=True, on_delete=models.SET_NULL, related_name='leader_department', related_query_name='leader_department', verbose_name='部门经理')
+    manager = models.ForeignKey(OAUser, null=True, on_delete=models.SET_NULL, related_name='manager_departments', related_query_name='manager_departments', verbose_name='部门领导')
