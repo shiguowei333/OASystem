@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import OAUser, UserStatusChoices
+from .models import OAUser, UserStatusChoices, OADepartment
 
 
 class LoginSerializer(serializers.Serializer):
@@ -14,7 +14,6 @@ class LoginSerializer(serializers.Serializer):
             user = OAUser.objects.filter(email=email).first()
             if not user:
                 raise serializers.ValidationError('用户不存在！')
-
             if not user.check_password(password):
                 raise serializers.ValidationError('密码错误！')
             if user.status == UserStatusChoices.UNACTIVE:
@@ -25,3 +24,14 @@ class LoginSerializer(serializers.Serializer):
         else:
             raise serializers.ValidationError('请输入邮箱和密码！')
         return attrs
+
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OADepartment
+        fields = '__all__'
+
+class UserSerializer(serializers.ModelSerializer):
+    department = DepartmentSerializer()
+    class Meta:
+        model = OAUser
+        exclude = ('password', 'groups', 'user_permissions')
