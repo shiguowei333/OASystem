@@ -54,7 +54,7 @@ MIDDLEWARE = [
 ]
 
 # 允许所有域名跨域访问
-CORS_ALLOWED_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'oaback.urls'
 
