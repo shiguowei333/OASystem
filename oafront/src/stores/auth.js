@@ -36,5 +36,12 @@ export const userAuthStore = defineStore('auth', () => {
         return _token.value
     })
 
-    return { setUserToken, user, token}
+    let is_logined = computed(() => {
+      if(Object.keys(user.value).length > 0 && token.value) {
+        return true
+      }
+      return false
+    })
+
+    return { setUserToken, user, token, is_logined}
 })
