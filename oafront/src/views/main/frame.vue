@@ -2,6 +2,77 @@
     <el-container class="container">
       <el-aside class="aside" width="200px">
         <router-link to="/" class="brand">OA管理系统</router-link>
+        <el-menu active-text-color="#ffd04b" background-color="#343a40" class="el-menu-vertical-demo"
+                default-active="1" text-color="#fff">
+            <el-menu-item index="1">
+              <template #title>
+                <el-icon>
+                  <HomeFilled />
+                </el-icon>
+                <span>首页</span>
+              </template>
+            </el-menu-item>
+            <el-sub-menu index="2">
+              <template #title>
+                <el-icon>
+                  <HomeFilled />
+                </el-icon>
+                <span>考勤管理</span>
+              </template>
+              <el-menu-item index="2-1">
+                <el-icon>
+                  <UserFilled />
+                </el-icon>
+                <span>个人考勤</span>
+              </el-menu-item>
+              <el-menu-item index="2-2">
+                <el-icon>
+                  <User />
+                </el-icon>
+                <span>下属考勤</span>
+              </el-menu-item>
+            </el-sub-menu>
+            <el-sub-menu index="3">
+              <template #title>
+                <el-icon>
+                  <BellFilled />
+                </el-icon>
+                <span>通知管理</span>
+              </template>
+              <el-menu-item index="3-1">
+                <el-icon>
+                  <CirclePlusFilled />
+                </el-icon>
+                <span>发布通知</span>
+              </el-menu-item>
+              <el-menu-item index="3-2">
+                <el-icon>
+                  <List />
+                </el-icon>
+                <span>通知列表</span>
+              </el-menu-item>
+            </el-sub-menu>
+            <el-sub-menu index="4">
+              <template #title>
+                <el-icon>
+                  <BellFilled />
+                </el-icon>
+                <span>员工管理</span>
+              </template>
+              <el-menu-item index="4-1">
+                <el-icon>
+                  <Avatar />
+                </el-icon>
+                <span>新增员工</span>
+              </el-menu-item>
+              <el-menu-item index="4-2">
+                <el-icon>
+                  <List />
+                </el-icon>
+                <span>员工列表</span>
+              </el-menu-item>
+            </el-sub-menu>
+        </el-menu>
       </el-aside>
       <el-container>
         <el-header class="header">Header</el-header>
@@ -38,5 +109,8 @@
     height: 60px;
     background-color: #fff;
     border-bottom: 1px solid #e6e6e6;
+  }
+  .el-menu {
+    border-right: none;
   }
 </style>
