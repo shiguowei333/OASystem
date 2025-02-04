@@ -1,21 +1,19 @@
 <template>
     <el-container class="container">
-      <el-aside class="aside" width="200px">
-        <router-link to="/" class="brand">OA管理系统</router-link>
+      <el-aside class="aside" :width="asideWidth">
+        <router-link to="/" class="brand">OA<span v-show="!isCollapse">管理系统</span></router-link>
         <el-menu active-text-color="#ffd04b" background-color="#343a40" class="el-menu-vertical-demo"
-                default-active="1" text-color="#fff">
+                default-active="1" text-color="#fff" :collapse="isCollapse" :collapse-transition="false">
             <el-menu-item index="1">
-              <template #title>
-                <el-icon>
-                  <HomeFilled />
-                </el-icon>
-                <span>首页</span>
-              </template>
+              <el-icon>
+                <HomeFilled />
+              </el-icon>
+              <span>首页</span>
             </el-menu-item>
             <el-sub-menu index="2">
               <template #title>
                 <el-icon>
-                  <HomeFilled />
+                  <Checked />
                 </el-icon>
                 <span>考勤管理</span>
               </template>
@@ -55,13 +53,13 @@
             <el-sub-menu index="4">
               <template #title>
                 <el-icon>
-                  <BellFilled />
+                  <Avatar />
                 </el-icon>
                 <span>员工管理</span>
               </template>
               <el-menu-item index="4-1">
                 <el-icon>
-                  <Avatar />
+                  <CirclePlusFilled />
                 </el-icon>
                 <span>新增员工</span>
               </el-menu-item>
@@ -75,14 +73,30 @@
         </el-menu>
       </el-aside>
       <el-container>
-        <el-header class="header">Header</el-header>
+        <el-header class="header">
+          <el-button :icon="isCollapse?'Expand':'Fold'" @click="onCollapseAside"></el-button>
+        </el-header>
         <el-main class="main">Main</el-main>
       </el-container>
     </el-container>
 </template>
 
 <script setup name="frame">
+  import { ref, computed } from 'vue'
+  import { Expand, Fold } from '@element-plus/icons-vue'
 
+  let isCollapse = ref(false)
+  let asideWidth = computed(() => {
+    if(isCollapse.value) {
+      return '64px'
+    }else {
+      return '250px'
+    }
+  })
+
+  const onCollapseAside = () => {
+    isCollapse.value = !isCollapse.value
+  }
 </script>
 
 <style scoped>
