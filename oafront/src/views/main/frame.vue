@@ -74,7 +74,24 @@
       </el-aside>
       <el-container>
         <el-header class="header">
-          <el-button :icon="isCollapse?'Expand':'Fold'" @click="onCollapseAside"></el-button>
+          <div class="left-header">
+            <el-button :icon="isCollapse?'Expand':'Fold'" @click="onCollapseAside"></el-button>
+          </div>
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              <el-avatar :size="30" :icon="UserFilled"></el-avatar>
+              <span style="margin-left: 10px;">白展堂</span>
+              <el-icon class="el-icon--right">
+                <arrow-down />
+              </el-icon>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>修改密码</el-dropdown-item>
+                <el-dropdown-item>退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </el-header>
         <el-main class="main">Main</el-main>
       </el-container>
@@ -123,6 +140,13 @@
     height: 60px;
     background-color: #fff;
     border-bottom: 1px solid #e6e6e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .el-dropdown-link {
+    display: flex;
+    align-items: center;
   }
   .el-menu {
     border-right: none;
