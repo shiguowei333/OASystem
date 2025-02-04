@@ -101,6 +101,7 @@
 <script setup name="frame">
   import { ref, computed } from 'vue'
   import { Expand, Fold } from '@element-plus/icons-vue'
+  import { userAuthStore } from '@/stores/auth'
 
   let isCollapse = ref(false)
   let asideWidth = computed(() => {
