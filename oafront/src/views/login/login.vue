@@ -36,7 +36,7 @@
 <script setup name="login">
     import login_image from '@/assets/image/login.png'
     import { reactive } from 'vue'
-    import axios from 'axios'
+    import authHttp from '@/api/authHttp'
     import { userAuthStore } from '@/stores/auth'
     import { useRouter } from 'vue-router'
 
@@ -48,7 +48,7 @@
         password: ''
     })
 
-    const onSubmit = () => {
+    const onSubmit = async() => {
         let pwdRgx = /^[0-9a-zA-Z_-]{6,20}/
         let emailRgx = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9])+/
         if(!emailRgx.test(form.email)) {
@@ -59,19 +59,17 @@
             alert('密码格式不满足！')
             return
         }
-        axios.post('http://127.0.0.1:8000/auth/login',{
-            email: form.email,
-            password: form.password
-        }).then((res) => {
-            let data = res.data
-            let token = data.token
-            let user = data.user
-            authStore.setUserToken(user,token)
-            $router.push({name: 'frame'})
-        }, (err) => {
-            let detail = err.response.data.detail
-            alert(detail)
-        })
+        
+        try {
+          let result = await authHttp.login(form.email,form.password)
+          let data = result.data
+          let token = data.token
+          let user = data.user
+          authStore.setUserToken(user, token)
+          $router.push({name: 'frame'})
+        } catch (error) {
+          alert(error)
+        }
     }
 </script>
 
