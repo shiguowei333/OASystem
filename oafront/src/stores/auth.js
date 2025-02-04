@@ -16,6 +16,13 @@ export const userAuthStore = defineStore('auth', () => {
         localStorage.setItem(TOKEN_KEY,token)
     }
 
+    function clearUserToken() {
+      _user.value = {}
+      _token.value = ''
+      localStorage.removeItem(USER_KEY)
+      localStorage.removeItem(TOKEN_KEY)
+    }
+
     let user = computed(() => {
         if(Object.keys(_user.value) == 0) {
             let user_str = localStorage.getItem(USER_KEY)
@@ -43,5 +50,5 @@ export const userAuthStore = defineStore('auth', () => {
       return false
     })
 
-    return { setUserToken, user, token, is_logined}
+    return { setUserToken, user, token, is_logined, clearUserToken}
 })

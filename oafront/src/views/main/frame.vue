@@ -80,7 +80,7 @@
           <el-dropdown>
             <span class="el-dropdown-link">
               <el-avatar :size="30" :icon="UserFilled"></el-avatar>
-              <span style="margin-left: 10px;">白展堂</span>
+              <span style="margin-left: 10px;">[{{ authStore.user.department.name }}]{{ authStore.user.real_name }}</span>
               <el-icon class="el-icon--right">
                 <arrow-down />
               </el-icon>
@@ -88,7 +88,7 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item>修改密码</el-dropdown-item>
-                <el-dropdown-item>退出登录</el-dropdown-item>
+                <el-dropdown-item @click="onLogout">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -100,8 +100,12 @@
 
 <script setup name="frame">
   import { ref, computed } from 'vue'
-  import { Expand, Fold } from '@element-plus/icons-vue'
+  import { Expand, Fold, UserFilled } from '@element-plus/icons-vue'
   import { userAuthStore } from '@/stores/auth'
+  import { useRouter } from 'vue-router'
+
+  const authStore = userAuthStore()
+  const $router = useRouter()
 
   let isCollapse = ref(false)
   let asideWidth = computed(() => {
@@ -114,6 +118,11 @@
 
   const onCollapseAside = () => {
     isCollapse.value = !isCollapse.value
+  }
+
+  const onLogout = () => {
+    authStore.clearUserToken()
+    $router.push({name: 'login'})
   }
 </script>
 
