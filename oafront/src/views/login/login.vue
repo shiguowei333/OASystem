@@ -39,6 +39,7 @@
     import authHttp from '@/api/authHttp'
     import { userAuthStore } from '@/stores/auth'
     import { useRouter } from 'vue-router'
+    import { ElMessage } from 'element-plus'
 
     const authStore = userAuthStore()
     const $router = useRouter()
@@ -52,11 +53,11 @@
         let pwdRgx = /^[0-9a-zA-Z_-]{6,20}/
         let emailRgx = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9])+/
         if(!emailRgx.test(form.email)) {
-            alert('邮箱格式不满足！')
+            ElMessage.info('邮箱格式不符合要求！')
             return
         }
         if(!pwdRgx.test(form.password)) {
-            alert('密码格式不满足！')
+          ElMessage.info('密码格式不符合要求！')
             return
         }
         
@@ -68,7 +69,7 @@
           authStore.setUserToken(user, token)
           $router.push({name: 'frame'})
         } catch (error) {
-          alert(error)
+          ElMessage.error('服务器异常！')
         }
     }
 </script>
