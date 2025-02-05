@@ -5,6 +5,7 @@ from .serializers import LoginSerializer, UserSerializer
 from datetime import datetime
 from .authentications import generate_jwt
 from rest_framework.permissions import IsAuthenticated
+from .serializers import ResetPwdSerializer
 
 
 class LoginView(APIView):
@@ -23,5 +24,12 @@ class LoginView(APIView):
 
 class ResetPwdView(APIView):
     def post(self, request):
-        print(request.user)
-        return Response({'detail': 'sucess！'})
+        serializer = ResetPwdSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            request.user.set_password(serializer.validated_data.get('pwd1'))
+            request.user.save()
+            return Response({'detail': '密码修改成功！'})
+        else:
+            detail = list(serializer.errors.values())[0][0]
+            print(detail)
+            return Response({'detail': '密码修改失败！'}, status=status.HTTP_400_BAD_REQUEST)
