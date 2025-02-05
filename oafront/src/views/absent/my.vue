@@ -12,14 +12,14 @@
       <el-form-item label="标题" :label-width="formLabelWidth" prop="title">
         <el-input v-model="absentForm.title" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="请假类型" :label-width="formLabelWidth" prop="absent_types">
+      <el-form-item label="请假类型" :label-width="formLabelWidth" prop="absent_type_id">
         <el-select v-model="absentForm.absent_type_id" placeholder="请选择请假类型">
-          <el-option v-for="item in absent_types" :label="item.name" :value="item.id" :key="item.name"></el-option>
+          <el-option v-for="item in absent_types" :label="item.name" :value="item.id" :key="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="请假时间" :label-width="formLabelWidth" prop="date_range">
         <el-date-picker v-model="absentForm.date_range" type="daterange" range-separator="到" start-placeholder="起始日期"
-          end-placeholder="结束日期">
+          end-placeholder="结束日期" format="YYYY-MM-DD" value-format="YYYY-MM-DD">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="审批领导" :label-width="formLabelWidth">
@@ -44,6 +44,7 @@
 import OAPageHeader from '@/components/OAPageHeader.vue';
 import { ref, reactive, onMounted, computed } from 'vue'
 import absentHttp from '@/api/absentHttp'
+import { ElMessage } from 'element-plus';
 
 let dialogVisible = ref(false)
 let formLabelWidth = ref('100px')
@@ -61,7 +62,7 @@ let rules = reactive({
   title: [
     {required: true, message: '请输入标题', trigger: 'blur'},
   ],
-  absent_types: [
+  absent_type_id: [
     {required: true, message: '请选择请假类型', trigger: 'change'}
   ],
   date_range: [
@@ -90,8 +91,27 @@ const onShowDialog = () => {
   dialogVisible.value = true
 }
 
+let absentFormRef = ref()
+
 const onSubmit = () => {
-  console.log(absentForm)
+  absentFormRef.value.validate(async(valid, fields) => {
+    console.log(valid)
+    if(valid) {
+      let data = {
+        title: absentForm.title,
+        absent_type_id: absentForm.absent_type_id,
+        start_date: absentForm.date_range[0],
+        end_date: absentForm.date_range[1],
+        request_content: absentForm.request_content
+      }
+      console.log(data)
+      let result = await absentHttp.applyAbsent(data)
+      if(result.status == 200) {
+        ElMessage.success('提交请假成功！')
+        dialogVisible.value = false
+      }
+    }
+  })
 }
 
 onMounted(async() => {
