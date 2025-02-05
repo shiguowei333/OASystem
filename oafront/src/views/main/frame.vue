@@ -2,8 +2,8 @@
   <el-container class="container">
     <el-aside class="aside" :width="asideWidth">
       <router-link to="/" class="brand">OA<span v-show="!isCollapse">管理系统</span></router-link>
-      <el-menu :router="true" active-text-color="#ffd04b" background-color="#343a40" class="el-menu-vertical-demo" default-active="1"
-        text-color="#fff" :collapse="isCollapse" :collapse-transition="false">
+      <el-menu :router="true" active-text-color="#ffd04b" background-color="#343a40" class="el-menu-vertical-demo"
+        default-active="1" text-color="#fff" :collapse="isCollapse" :collapse-transition="false">
         <el-menu-item index="1">
           <el-icon>
             <HomeFilled />
@@ -17,13 +17,13 @@
             </el-icon>
             <span>考勤管理</span>
           </template>
-          <el-menu-item index="2-1" :route="{name: 'myabsent'}">
+          <el-menu-item index="2-1" :route="{ name: 'myabsent' }">
             <el-icon>
               <UserFilled />
             </el-icon>
             <span>个人考勤</span>
           </el-menu-item>
-          <el-menu-item index="2-2" :route="{name: 'subabsent'}">
+          <el-menu-item index="2-2" :route="{ name: 'subabsent' }">
             <el-icon>
               <User />
             </el-icon>
@@ -104,21 +104,21 @@
         <el-input v-model="restForm.oldpwd" autocomplete="off" type="password" />
       </el-form-item>
       <el-form-item label=" 新密码" :label-width="formLabelWidth" prop="pwd1">
-          <el-input v-model="restForm.pwd1" autocomplete="off" type="password" />
+        <el-input v-model="restForm.pwd1" autocomplete="off" type="password" />
       </el-form-item>
       <el-form-item label=" 确认密码" :label-width="formLabelWidth" prop="pwd2">
-            <el-input v-model="restForm.pwd2" autocomplete="off" type="password" />
+        <el-input v-model="restForm.pwd2" autocomplete="off" type="password" />
       </el-form-item>
     </el-form>
     <template #footer>
       <div class=" dialog-footer">
-            <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="onSubmit">
-                确认
-            </el-button>
-        </div>
-</template>
-</el-dialog>
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="onSubmit">
+          确认
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup name="frame">
@@ -177,18 +177,18 @@ const onLogout = () => {
 }
 
 const onSubmit = () => {
-  formTag.value.validate(async(valid, fields) => {
-    if(valid) {
+  formTag.value.validate(async (valid, fields) => {
+    if (valid) {
       try {
         let result = await authHttp.resetPwd(restForm.oldpwd, restForm.pwd1, restForm.pwd2)
-        if(result.status == 200) {
+        if (result.status == 200) {
           ElMessage.success('密码修改成功！')
           dialogVisible.value = false
         }
       } catch (error) {
         ElMessage.error('密码修改失败!')
       }
-    }else {
+    } else {
       ElMessage.info('输入密码不符合要求')
     }
   })
