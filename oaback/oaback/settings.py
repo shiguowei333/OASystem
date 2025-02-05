@@ -143,3 +143,5 @@ REST_FRAMEWORK = {
         'apps.oaauth.authentications.UserTokenAuthentication',
     ],
 }
+
+APPEND_SLASH = False

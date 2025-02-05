@@ -35,8 +35,9 @@ class AbsentSerializer(serializers.ModelSerializer):
 
         if responder is None:
             validated_data['status'] = AbsentStatusChoices.PASS
-
-        return Absent.objects.create(**validated_data, responder=responder, request=user)
+        else:
+            validated_data['status'] = AbsentStatusChoices.AUDITING
+        return Absent.objects.create(**validated_data, responder=responder, requester=user)
 
 
     def update(self, instance, validated_data):
