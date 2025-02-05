@@ -41,7 +41,7 @@ class AbsentSerializer(serializers.ModelSerializer):
 
 
     def update(self, instance, validated_data):
-        if instance.status == AbsentStatusChoices.AUDITING:
+        if instance.status == AbsentStatusChoices.PASS:
             raise exceptions.APIException('该请假单已审批')
         request = self.context['request']
         user = request.user

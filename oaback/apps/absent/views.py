@@ -7,5 +7,9 @@ class AbsentViewSet(mixins.CreateModelMixin,
                    mixins.UpdateModelMixin,
                    mixins.ListModelMixin,
                    viewsets.GenericViewSet):
-    queryset = AbsentType.objects.all()
+    queryset = Absent.objects.all()
     serializer_class = AbsentSerializer
+
+    def update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return super().update(request, *args, **kwargs)
