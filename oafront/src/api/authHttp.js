@@ -5,7 +5,12 @@ const login = (email, password) => {
   return request.post(path, {email, password})
 }
 
+const resetPwd = (oldpwd, pwd1, pwd2) => {
+  const path = "/auth/resetpwd"
+  return request.post(path, {oldpwd, pwd1, pwd2})
+}
 
 export default {
-  login
+  login,
+  resetPwd
 }

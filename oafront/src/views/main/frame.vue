@@ -125,6 +125,8 @@ import { Expand, Fold, UserFilled } from '@element-plus/icons-vue'
 import { userAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { reactive } from 'vue'
+import authHttp from '@/api/authHttp'
+import { ElMessage } from 'element-plus'
 
 const authStore = userAuthStore()
 const $router = useRouter()
@@ -173,11 +175,19 @@ const onLogout = () => {
 }
 
 const onSubmit = () => {
-  formTag.value.validate((valid, fields) => {
+  formTag.value.validate(async(valid, fields) => {
     if(valid) {
-      console.log('字段校验成功')
+      try {
+        let result = await authHttp.resetPwd(restForm.oldpwd, restForm.pwd1, restForm.pwd2)
+        if(result.status == 200) {
+          ElMessage.success('密码修改成功！')
+          dialogVisible.value = false
+        }
+      } catch (error) {
+        ElMessage.error('密码修改失败!')
+      }
     }else {
-      console.log('字段校验失败')
+      ElMessage.info('输入密码不符合要求')
     }
   })
 }
