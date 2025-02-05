@@ -23,7 +23,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="审批领导" :label-width="formLabelWidth">
-        <el-input value="白展堂" readonly disabled />
+        <el-input :value="responder_str" readonly disabled />
       </el-form-item>
       <el-form-item label="请假理由" :label-width="formLabelWidth" prop="request_content">
         <el-input type="textarea"  v-model="absentForm.request_content"/>
@@ -42,10 +42,15 @@
 
 <script setup name="myabsent">
 import OAPageHeader from '@/components/OAPageHeader.vue';
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
+import absentHttp from '@/api/absentHttp'
 
 let dialogVisible = ref(false)
 let formLabelWidth = ref('100px')
+let responder = reactive({
+  email: '',
+  realname: ''
+})
 let absentForm = reactive({
   title: '',
   absent_type_id: null,
@@ -69,6 +74,14 @@ let rules = reactive({
 
 let absent_types = ref([])
 
+let responder_str = computed(() => {
+  if(responder.email) {
+    return `${responder.realname}[${responder.email}]`
+  }else {
+    return '无'
+  }
+})
+
 const onShowDialog = () => {
   absentForm.title = ''
   absentForm.absent_type_id = null
@@ -80,6 +93,14 @@ const onShowDialog = () => {
 const onSubmit = () => {
   console.log(absentForm)
 }
+
+onMounted(async() => {
+  let absent_types_result = await absentHttp.getAbsentTypes()
+  absent_types = absent_types_result.data
+
+  let responder_result = await absentHttp.getResponder()
+  Object.assign(responder, responder_result.data)
+})
 </script>
 
 <style lang="scss" scoped></style>
