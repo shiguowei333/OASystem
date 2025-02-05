@@ -1,9 +1,13 @@
 from django.shortcuts import render
 from rest_framework import viewsets, mixins
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import Absent, AbsentType, AbsentStatusChoices
-from .serializers import AbsentSerializer
+from .serializers import AbsentSerializer, AbsentTypeSerializer
+from .utils import get_responder
+from apps.oaauth.serializers import UserSerializer
+
 
 class AbsentViewSet(mixins.CreateModelMixin,
                    mixins.UpdateModelMixin,
@@ -25,4 +29,16 @@ class AbsentViewSet(mixins.CreateModelMixin,
             result = queryset.filter(requester=request.user)
 
         serializer =  self.serializer_class(result, many=True)
+        return Response(data=serializer.data)
+
+class AbsentTypeViewSet(APIView):
+    def get(self, request):
+        result = AbsentType.objects.all()
+        serializer = AbsentTypeSerializer(result, many=True)
+        return Response(data=serializer.data)
+
+class ResponderView(APIView):
+    def get(self, request):
+        responder = get_responder(request)
+        serializer = UserSerializer(responder)
         return Response(data=serializer.data)

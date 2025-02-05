@@ -1,6 +1,8 @@
 from logging import exception
 
 from rest_framework import serializers, exceptions
+
+from apps.absent.utils import get_responder
 from apps.oaauth.serializers import UserSerializer
 from apps.absent.models import Absent, AbsentType, AbsentStatusChoices
 
@@ -25,13 +27,7 @@ class AbsentSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context['request']
         user = request.user
-        if user.department.leader.uid == user.uid:
-            if user.department.name == '董事会':
-                responder = None
-            else:
-                responder = user.department.manager
-        else:
-            responder = user.department.leader
+        responder = get_responder(request)
 
         if responder is None:
             validated_data['status'] = AbsentStatusChoices.PASS
