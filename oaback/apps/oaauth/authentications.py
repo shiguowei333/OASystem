@@ -12,6 +12,9 @@ def generate_jwt(user):
     timestamp = int(time.time()) + 60*60*24*7
     return jwt.encode({'userid':user.pk,'exp':timestamp}, settings.SECRET_KEY, algorithm='HS256')
 
+class UserTokenAuthentication(BaseAuthentication):
+    def authenticate(self, request):
+        return request._request.user, request._request.auth
 
 class JWTAuthentication(BaseAuthentication):
 
@@ -37,6 +40,7 @@ class JWTAuthentication(BaseAuthentication):
             userid = jwt_info.get('userid')
             try:
                 user = OAUser.objects.get(pk=userid)
+                setattr(request, 'user', user)
                 return user, jwt_token
             except:
                 msg = '用户不存在！'

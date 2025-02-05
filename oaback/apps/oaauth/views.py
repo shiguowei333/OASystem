@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from .serializers import LoginSerializer, UserSerializer
 from datetime import datetime
 from .authentications import generate_jwt
+from rest_framework.permissions import IsAuthenticated
 
 
 class LoginView(APIView):
@@ -18,3 +19,9 @@ class LoginView(APIView):
         else:
             print(serializer.errors)
             return Response({'detail': '登录验证失败！'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ResetPwdView(APIView):
+    def post(self, request):
+        print(request.user)
+        return Response({'detail': 'sucess！'})
