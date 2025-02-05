@@ -6,6 +6,31 @@
           <Plus />
         </el-icon>发起考勤</el-button>
     </el-card>
+    <el-card>
+      <el-table :data="absents" style="width: 100%;">
+        <el-table-column prop="title" label="标题" />
+        <el-table-column prop="absent_type.name" label="类型" />
+        <el-table-column prop="request_content" label="原因" />
+        <el-table-column label="发起时间">
+          <template #default="scope">
+            {{ timeFormatter.stringFromDateTime(scope.row.create_time) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="start_date" label="开始日期" />
+        <el-table-column prop="end_date" label="结束日期" />
+        <el-table-column label="审核领导">
+          {{ responder_str }}
+        </el-table-column>
+        <el-table-column prop="response_content" label="反馈意见" />
+        <el-table-column label="审核状态">
+          <template #default="scope">
+            <el-tag type="info" v-if="scope.row.status == 1">审核中</el-tag>
+            <el-tag type="success" v-else-if="scope.row.status == 2">已通过</el-tag>
+            <el-tag type="danger" v-else>已拒绝</el-tag>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
   </el-space>
   <el-dialog v-model="dialogVisible" title="发起请假" width="500">
     <el-form :model="absentForm" :rules="rules" ref="absentFormRef">
@@ -26,7 +51,7 @@
         <el-input :value="responder_str" readonly disabled />
       </el-form-item>
       <el-form-item label="请假理由" :label-width="formLabelWidth" prop="request_content">
-        <el-input type="textarea"  v-model="absentForm.request_content"/>
+        <el-input type="textarea" v-model="absentForm.request_content" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -44,7 +69,8 @@
 import OAPageHeader from '@/components/OAPageHeader.vue';
 import { ref, reactive, onMounted, computed } from 'vue'
 import absentHttp from '@/api/absentHttp'
-import { ElMessage } from 'element-plus';
+import { ElMessage } from 'element-plus'
+import timeFormatter from '@/utils/timeFormatter'
 
 let dialogVisible = ref(false)
 let formLabelWidth = ref('100px')
@@ -60,25 +86,25 @@ let absentForm = reactive({
 })
 let rules = reactive({
   title: [
-    {required: true, message: '请输入标题', trigger: 'blur'},
+    { required: true, message: '请输入标题', trigger: 'blur' },
   ],
   absent_type_id: [
-    {required: true, message: '请选择请假类型', trigger: 'change'}
+    { required: true, message: '请选择请假类型', trigger: 'change' }
   ],
   date_range: [
-    {required: true, message: '请选择请假时间', trigger: 'blur'}
+    { required: true, message: '请选择请假时间', trigger: 'blur' }
   ],
   request_content: [
-    {required: true, message: '请输入请假理由', trigger: 'blur'}
+    { required: true, message: '请输入请假理由', trigger: 'blur' }
   ]
 })
 
 let absent_types = ref([])
 
 let responder_str = computed(() => {
-  if(responder.email) {
+  if (responder.email) {
     return `${responder.realname}[${responder.email}]`
-  }else {
+  } else {
     return '无'
   }
 })
@@ -91,12 +117,14 @@ const onShowDialog = () => {
   dialogVisible.value = true
 }
 
+let absents = ref([])
+
 let absentFormRef = ref()
 
 const onSubmit = () => {
-  absentFormRef.value.validate(async(valid, fields) => {
+  absentFormRef.value.validate(async (valid, fields) => {
     console.log(valid)
-    if(valid) {
+    if (valid) {
       let data = {
         title: absentForm.title,
         absent_type_id: absentForm.absent_type_id,
@@ -106,7 +134,7 @@ const onSubmit = () => {
       }
       console.log(data)
       let result = await absentHttp.applyAbsent(data)
-      if(result.status == 200) {
+      if (result.status == 200) {
         ElMessage.success('提交请假成功！')
         dialogVisible.value = false
       }
@@ -114,12 +142,16 @@ const onSubmit = () => {
   })
 }
 
-onMounted(async() => {
+onMounted(async () => {
   let absent_types_result = await absentHttp.getAbsentTypes()
   absent_types = absent_types_result.data
 
   let responder_result = await absentHttp.getResponder()
   Object.assign(responder, responder_result.data)
+
+  let absents_result = await absentHttp.getMyAbsents()
+  absents.value = absents_result.data
+  console.log(absents.value)
 })
 </script>
 

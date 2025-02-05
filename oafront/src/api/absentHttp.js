@@ -15,8 +15,14 @@ const applyAbsent = (data) => {
   return request.post(path, data)
 }
 
+const getMyAbsents = (page=1) => {
+  const path = `/absent/absent?who=my&page=${page}`
+  return request.get(path)
+}
+
 export default {
   getAbsentTypes,
   getResponder,
-  applyAbsent
+  applyAbsent,
+  getMyAbsents
 }
