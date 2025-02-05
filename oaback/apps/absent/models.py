@@ -22,4 +22,4 @@ class Absent(models.Model):
     start_date = models.DateField(verbose_name='开始日期')
     end_date = models.DateField(verbose_name='结束日期')
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='请假发起时间')
-    response_content = models.TextField(verbose_name='审批意见')
+    response_content = models.TextField(blank=True, verbose_name='审批意见')
