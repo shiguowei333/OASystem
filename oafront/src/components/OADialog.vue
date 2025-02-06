@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+
 let dialogVisible = defineModel({required: true})
 let props = defineProps({
     title: {
@@ -26,7 +26,7 @@ let props = defineProps({
     }
 })
 
-emits = defineEmits(['cancel', 'submit'])
+const emits = defineEmits(['cancel', 'submit'])
 
 const onCancel = () => {
     dialogVisible.value = false
@@ -34,7 +34,6 @@ const onCancel = () => {
 }
 
 const onSubmit = () => {
-    dialogVisible.value = false
     emits('submit')
 }
 </script>

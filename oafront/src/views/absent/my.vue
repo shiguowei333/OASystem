@@ -36,7 +36,7 @@
       </template>
     </el-card>
   </OAMain>
-  <el-dialog v-model="dialogVisible" title="发起请假" width="500">
+  <OADialog title="发起请假" v-model="dialogVisible" @submit="onSubmit">
     <el-form :model="absentForm" :rules="rules" ref="absentFormRef">
       <el-form-item label="标题" :label-width="formLabelWidth" prop="title">
         <el-input v-model="absentForm.title" autocomplete="off" />
@@ -58,15 +58,7 @@
         <el-input type="textarea" v-model="absentForm.request_content" />
       </el-form-item>
     </el-form>
-    <template #footer>
-      <div class=" dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="onSubmit">
-          确认
-        </el-button>
-      </div>
-    </template>
-  </el-dialog>
+  </OADialog>
 </template>
 
 <script setup name="myabsent">
@@ -77,6 +69,7 @@ import { ElMessage } from 'element-plus'
 import timeFormatter from '@/utils/timeFormatter'
 import { watch } from 'vue'
 import OAPagination from '@/components/OAPagination.vue'
+import OADialog from '@/components/OADialog.vue'
 
 let dialogVisible = ref(false)
 let formLabelWidth = ref('100px')
