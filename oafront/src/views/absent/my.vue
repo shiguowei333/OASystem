@@ -132,9 +132,9 @@ const onSubmit = () => {
         end_date: absentForm.date_range[1],
         request_content: absentForm.request_content
       }
-      console.log(data)
       let result = await absentHttp.applyAbsent(data)
-      if (result.status == 200) {
+      console.log(result.status)
+      if (result.status == 201) {
         ElMessage.success('提交请假成功！')
         dialogVisible.value = false
       }
@@ -151,7 +151,6 @@ onMounted(async () => {
 
   let absents_result = await absentHttp.getMyAbsents()
   absents.value = absents_result.data
-  console.log(absents.value)
 })
 </script>
 
