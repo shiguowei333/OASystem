@@ -3,6 +3,7 @@
         <el-card>
             <el-table :data="absents" style="width: 100%;">
                 <el-table-column prop="title" label="标题" />
+                <el-table-column prop="requester.real_name" label="发起人" />
                 <el-table-column prop="absent_type.name" label="类型" />
                 <el-table-column prop="request_content" label="原因" />
                 <el-table-column label="发起时间">
@@ -23,8 +24,8 @@
                 </el-table-column>
                 <el-table-column label="处理">
                     <template #default="scope">
-                        <el-button v-if="scope.row.status == 1" type="primary" icon="EditPen" @click="onShowDialog" />
-                        <el-button v-else type="default" icon="EditPen" disabled>已处理</el-button>
+                        <el-button v-if="scope.row.status == 1" type="primary" icon="EditPen" @click="onShowDialog(scope.$index)" />
+                        <el-button v-else type="default" disabled>已处理</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -74,13 +75,27 @@ let rules = reactive({
   status: [{required: true, message: '请选择处理结果！', trigger: 'change'}],
   response_content: [{required: true, message: '请输入理由！', trigger: "blur"}]
 })
+let handleIndex = null
 
 const onSumitAbsent = () => {
-
+  absentFormRef.value.validate(async(valid, fields) => {
+    if(valid) {
+      const absent = absents.value[handleIndex]
+      const result = await absentHttp.handleSubAbsent(absent.id,absentForm.status,absentForm.response_content)
+      if(result.status == 200) {
+        absents.value.splice(handleIndex, 1, result.data)
+        ElMessage.success('考勤处理成功')
+        dialogVisible.value = false
+      }
+    }
+  })
 }
 
-const onShowDialog = () => {
+const onShowDialog = (index) => {
+  absentForm.status = 2
+  absentForm.response_content = ''
   dialogVisible.value = true
+  handleIndex = index
 }
 
 onMounted(async() => {

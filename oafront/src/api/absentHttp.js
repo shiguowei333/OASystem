@@ -25,10 +25,16 @@ const getSubAbsents = (page=1) => {
   return request.get(path)
 }
 
+const handleSubAbsent = (absent_id, status, response_content) => {
+  const path = `/absent/absent/${absent_id}`
+  return request.put(path,{status, response_content})
+}
+
 export default {
   getAbsentTypes,
   getResponder,
   applyAbsent,
   getMyAbsents,
-  getSubAbsents
+  getSubAbsents,
+  handleSubAbsent
 }
