@@ -29,8 +29,9 @@
                 </el-table-column>
             </el-table>
             <template #footer>
-                <el-pagination background layout="prev, pager, next" :total="pagination.total"
-                    v-model:current-page="pagination.page" :page-size="10" />
+                <!-- <el-pagination background layout="prev, pager, next" :total="pagination.total"
+                    v-model:current-page="pagination.page" :page-size="10" /> -->
+                    <OAPagination v-model="pagination.page" :total="pagination.total"></OAPagination>
             </template>
         </el-card>
     </OAMain>
@@ -42,6 +43,7 @@ import timeFormatter from '@/utils/timeFormatter'
 import absentHttp from '@/api/absentHttp'
 import { ref, reactive, onMounted, computed } from 'vue'
 import { ElMessage } from 'element-plus'
+import OAPagination from '@/components/OAPagination.vue'
 
 let absents = ref([])
 let pagination = reactive({
