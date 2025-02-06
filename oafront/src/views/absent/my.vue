@@ -30,6 +30,9 @@
           </template>
         </el-table-column>
       </el-table>
+      <template #footer>
+        <el-pagination background layout="prev, pager, next" :total="pagination.total" v-model:current-page="pagination.page" :page-size="10" />
+      </template>
     </el-card>
   </el-space>
   <el-dialog v-model="dialogVisible" title="发起请假" width="500">
@@ -71,6 +74,7 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import absentHttp from '@/api/absentHttp'
 import { ElMessage } from 'element-plus'
 import timeFormatter from '@/utils/timeFormatter'
+import { watch } from 'vue';
 
 let dialogVisible = ref(false)
 let formLabelWidth = ref('100px')
@@ -117,9 +121,20 @@ const onShowDialog = () => {
   dialogVisible.value = true
 }
 
+let pagination = reactive({
+    total: 0,
+    page: 1
+})
 let absents = ref([])
 
 let absentFormRef = ref()
+
+watch(() => pagination.page,async(value) => {
+    let absents_result = await absentHttp.getMyAbsents(value)
+    pagination.total = absents_result.data.count
+    absents.value = absents_result.data.results
+})
+
 
 const onSubmit = () => {
   absentFormRef.value.validate(async (valid, fields) => {
@@ -150,6 +165,7 @@ onMounted(async () => {
   Object.assign(responder, responder_result.data)
 
   let absents_result = await absentHttp.getMyAbsents()
+  pagination.total = absents_result.data.count
   absents.value = absents_result.data.results
 })
 </script>
