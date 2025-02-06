@@ -150,7 +150,7 @@ onMounted(async () => {
   Object.assign(responder, responder_result.data)
 
   let absents_result = await absentHttp.getMyAbsents()
-  absents.value = absents_result.data
+  absents.value = absents_result.data.results
 })
 </script>
 
