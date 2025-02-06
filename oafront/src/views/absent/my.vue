@@ -170,4 +170,12 @@ onMounted(async () => {
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.el-pagination {
+    justify-content: right;
+}
+
+.el-space :deep(.el-space__item) {
+    width: 100%;
+}
+</style>
