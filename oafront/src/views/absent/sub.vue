@@ -12,7 +12,7 @@
                 </el-table-column>
                 <el-table-column prop="start_date" label="开始日期" />
                 <el-table-column prop="end_date" label="结束日期" />
-                <el-table-column prop="responder.realname" label="审核领导" />
+                <el-table-column prop="responder.real_name" label="审核领导" />
                 <el-table-column prop="response_content" label="反馈意见" />
                 <el-table-column label="审核状态">
                     <template #default="scope">
@@ -49,6 +49,14 @@ let absents = ref([])
 let pagination = reactive({
     total: 0,
     page: 1
+})
+
+onMounted(async() => {
+  let result = await absentHttp.getSubAbsents()
+  if(result.status == 200) {
+    pagination.total = result.data.count
+    absents.value = result.data.results
+  }
 })
 
 </script>

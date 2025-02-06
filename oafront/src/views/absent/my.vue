@@ -75,7 +75,7 @@ let dialogVisible = ref(false)
 let formLabelWidth = ref('100px')
 let responder = reactive({
   email: '',
-  realname: ''
+  real_name: ''
 })
 let absentForm = reactive({
   title: '',
@@ -102,7 +102,7 @@ let absent_types = ref([])
 
 let responder_str = computed(() => {
   if (responder.email) {
-    return `${responder.realname}[${responder.email}]`
+    return `${responder.real_name}[${responder.email}]`
   } else {
     return '无'
   }
