@@ -1,6 +1,5 @@
 <template>
-    <el-space direction="vertical" fill :size="20" style="width: 100%;">
-        <OAPageHeader content="下属考勤"></OAPageHeader>
+    <OAMain title="下属考勤">
         <el-card>
             <el-table :data="absents" style="width: 100%;">
                 <el-table-column prop="title" label="标题" />
@@ -34,11 +33,11 @@
                     v-model:current-page="pagination.page" :page-size="10" />
             </template>
         </el-card>
-    </el-space>
+    </OAMain>
 </template>
 
 <script setup name="myabsent">
-import OAPageHeader from '@/components/OAPageHeader.vue'
+import OAMain from '@/components/OAMain.vue'
 import timeFormatter from '@/utils/timeFormatter'
 import absentHttp from '@/api/absentHttp'
 import { ref, reactive, onMounted, computed } from 'vue'
@@ -55,9 +54,5 @@ let pagination = reactive({
 <style scoped>
 .el-pagination {
     justify-content: right;
-}
-
-.el-space :deep(.el-space__item) {
-    width: 100%;
 }
 </style>
