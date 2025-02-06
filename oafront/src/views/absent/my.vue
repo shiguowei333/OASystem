@@ -133,7 +133,6 @@ watch(() => pagination.page, async (value) => {
 
 const onSubmit = () => {
   absentFormRef.value.validate(async (valid, fields) => {
-    console.log(valid)
     if (valid) {
       let data = {
         title: absentForm.title,
@@ -143,8 +142,8 @@ const onSubmit = () => {
         request_content: absentForm.request_content
       }
       let result = await absentHttp.applyAbsent(data)
-      console.log(result.status)
       if (result.status == 201) {
+        absents.value.unshift(result.data)
         ElMessage.success('提交请假成功！')
         dialogVisible.value = false
       }
