@@ -23,7 +23,7 @@
                 </el-table-column>
                 <el-table-column label="处理">
                     <template #default="scope">
-                        <el-button v-if="scope.row.status == 1" type="primary" icon="EditPen" />
+                        <el-button v-if="scope.row.status == 1" type="primary" icon="EditPen" @click="onShowDialog" />
                         <el-button v-else type="default" icon="EditPen" disabled>已处理</el-button>
                     </template>
                 </el-table-column>
@@ -35,6 +35,19 @@
             </template>
         </el-card>
     </OAMain>
+    <OADialog title="考勤审核" v-model="dialogVisible" @submit="onSumitAbsent" label-width="100px">
+      <el-form :model="absentForm" :rules="rules" ref="absentFormRef">
+      <el-form-item label="结果"  prop="status">
+        <el-radio-group v-model="absentForm.status" class="ml-4">
+          <el-radio :value="2" >通过</el-radio>
+          <el-radio :value="3" >拒绝</el-radio>
+        </el-radio-group>        
+      </el-form-item>
+      <el-form-item label="理由" size="normal" prop="response_content">
+        <el-input type="textarea" v-model="absentForm.response_content" />
+      </el-form-item>
+    </el-form>
+    </OADialog>
 </template>
 
 <script setup name="myabsent">
@@ -44,12 +57,31 @@ import absentHttp from '@/api/absentHttp'
 import { ref, reactive, onMounted, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import OAPagination from '@/components/OAPagination.vue'
+import OADialog from '@/components/OADialog.vue'
 
 let absents = ref([])
 let pagination = reactive({
     total: 0,
     page: 1
 })
+let absentFormRef = ref()
+let dialogVisible = ref(false)
+let absentForm = reactive({
+  status: 2,
+  response_content: ''
+})
+let rules = reactive({
+  status: [{required: true, message: '请选择处理结果！', trigger: 'change'}],
+  response_content: [{required: true, message: '请输入理由！', trigger: "blur"}]
+})
+
+const onSumitAbsent = () => {
+
+}
+
+const onShowDialog = () => {
+  dialogVisible.value = true
+}
 
 onMounted(async() => {
   let result = await absentHttp.getSubAbsents()
